@@ -5,18 +5,59 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import coil.load
 import com.example.newsflow.R
+import com.example.newsflow.databinding.FragmentDetailNewsBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class DetailNewsFragment : Fragment() {
+    private val viewModel: DetailNewsViewModel by viewModels()
+    lateinit var binding: FragmentDetailNewsBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_detail_news, container, false)
+    ): View {
+        binding = FragmentDetailNewsBinding.inflate(inflater, container, false)
+        renderDetailNewsFragment()
+        return binding.root
     }
 
+
+    private fun renderDetailNewsFragment() {
+        lifecycleScope.launch {
+            viewModel.uiState.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect { state ->
+                    when (state.newsState) {
+                        is DetailNewsContract.NewsState.Idle -> {
+                            binding.progressBar.visibility = View.GONE
+                        }
+
+                        is DetailNewsContract.NewsState.Loading -> {
+                            binding.progressBar.visibility = View.VISIBLE
+
+                        }
+                        is DetailNewsContract.NewsState.Success -> {
+                            binding.progressBar.visibility = View.GONE
+                            binding.newsImage.load(state.newsState.article.urlToImage) {
+                                crossfade(true)
+                            }
+                            binding.newsText.text = state.newsState.article.description
+
+                        }
+                        is DetailNewsContract.NewsState.Error -> {
+                            binding.progressBar.visibility = View.GONE
+                            //Toast
+                        }
+                    }
+                }
+        }
+    }
 }

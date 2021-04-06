@@ -6,18 +6,21 @@
           <variable
               name="article"
               type="com.example.newsflow.common.models.Article" />
+        <variable
+            name="onClickListener"
+            type="android.view.View.OnClickListener" />
     </data>
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:onClick="@{onClickListener}"
         android:layout_margin="10dp"
         android:elevation="10dp"
         app:cardCornerRadius="20dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:background="@color/black"
             android:layout_height="match_parent">
 
             <ImageView
@@ -30,6 +33,7 @@
 
             <TextView
                 android:id="@+id/title_news_item"
+                android:background="#B300DDFF"
                 style="@style/TextAppearance.AppCompat.Title"
                 android:text="@{article.title}"
                 android:layout_width="match_parent"

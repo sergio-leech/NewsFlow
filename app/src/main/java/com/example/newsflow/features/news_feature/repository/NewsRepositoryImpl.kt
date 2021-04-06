@@ -3,6 +3,7 @@ package com.example.newsflow.features.news_feature.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.example.newsflow.common.Constant.NETWORK_PAGE_SIZE
 import com.example.newsflow.common.models.Article
 import com.example.newsflow.common.paging.NewsPagingSource
 import com.example.newsflow.common.service.NewsService
@@ -18,9 +19,5 @@ class NewsRepositoryImpl @Inject constructor(private val newsService: NewsServic
             ),
             pagingSourceFactory = { NewsPagingSource(newsService) }
         ).flow
-    }
-
-    companion object {
-        private const val NETWORK_PAGE_SIZE = 20
     }
 }

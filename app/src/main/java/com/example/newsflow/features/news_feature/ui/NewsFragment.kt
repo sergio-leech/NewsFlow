@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -34,28 +35,52 @@ class NewsFragment : Fragment() {
         binding = FragmentNewsBinding.inflate(inflater, container, false)
         adapter = NewsPagingAdapter()
         binding.newsRecyclerView.adapter = adapter
-        lifecycleScope.launch {
-            viewModel.list.collectLatest {data ->
-                adapter.submitData(lifecycle,data)
+        /*lifecycleScope.launch {
+            viewModel.list.collectLatest { data ->
+                adapter.submitData(lifecycle, data)
             }
-        }
+        }*/
 
-        adapter.addLoadStateListener { state ->
-            when(state.refresh){
-                is LoadState.Loading ->{
+      /*  adapter.addLoadStateListener { state ->
+            when (state.refresh) {
+                is LoadState.Loading -> {
                     binding.progressBar.visibility = View.VISIBLE
                 }
-                is LoadState.NotLoading ->{
+                is LoadState.NotLoading -> {
                     binding.progressBar.visibility = View.GONE
                 }
-                is LoadState.Error ->{
+                is LoadState.Error -> {
                     binding.progressBar.visibility = View.GONE
 
                 }
             }
-        }
+        }*/
+        renderNewsFragment()
 
         return binding.root
+    }
+
+
+    private fun renderNewsFragment() {
+        lifecycleScope.launch {
+            viewModel.uiState.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED).collectLatest {state->
+                when(state.newsState){
+                    is NewsContract.NewsState.Idle ->{
+                        binding.progressBar.visibility = View.GONE
+                    }
+                    is NewsContract.NewsState.Loading ->{
+                        binding.progressBar.visibility = View.VISIBLE
+                    }
+                    is NewsContract.NewsState.Success ->{
+                        binding.progressBar.visibility = View.GONE
+                        adapter.submitData(state.newsState.news)
+                    }
+                    is NewsContract.NewsState.Error ->{
+                        Toast.makeText(requireContext(),"ERROR",Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
     }
 
 
