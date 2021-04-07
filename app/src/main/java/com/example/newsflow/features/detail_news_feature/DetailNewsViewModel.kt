@@ -2,7 +2,6 @@ package com.example.newsflow.features.detail_news_feature
 
 import androidx.lifecycle.SavedStateHandle
 import com.example.newsflow.common.NavigationKeyArgs
-import com.example.newsflow.common.models.Article
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -10,7 +9,7 @@ import javax.inject.Inject
 class DetailNewsViewModel @Inject constructor(private val savedStateHandle: SavedStateHandle) :
     DetailNewsBaseViewModel<DetailNewsContract.State, DetailNewsContract.Event, DetailNewsContract.Effect>() {
 
-    val article = savedStateHandle.get<Article>(NavigationKeyArgs.ARTICLE)
+    val article = savedStateHandle.get<String>(NavigationKeyArgs.ARTICLE)
 
     override val initialState: DetailNewsContract.State
         get() = DetailNewsContract.State(DetailNewsContract.NewsState.Idle)

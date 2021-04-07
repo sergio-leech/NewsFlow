@@ -44,7 +44,7 @@ class NewsPagingAdapter() :
         }
 
         private fun navigateToNews(article: Article, view: View) {
-            val arg = bundleOf(NavigationKeyArgs.ARTICLE to article)
+            val arg = bundleOf(NavigationKeyArgs.ARTICLE to article.url)
             view.findNavController().navigate(R.id.action_newsFragment_to_detailNewsFragment, arg)
         }
 

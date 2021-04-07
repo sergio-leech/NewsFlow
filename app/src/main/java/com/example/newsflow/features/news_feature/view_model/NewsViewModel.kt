@@ -37,7 +37,7 @@ class NewsViewModel @Inject constructor(private val newsRepository: NewsReposito
                 }
             }catch (exception:Exception){
                 setState { copy(newsState = NewsContract.NewsState.Error(exception = exception.toString())) }
-                //setEffect { NewsContract.Effect.OnShowToast }
+                setEffect { NewsContract.Effect.OnShowToast }
             }
         }
     }

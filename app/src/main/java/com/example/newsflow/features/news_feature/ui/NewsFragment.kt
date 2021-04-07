@@ -41,21 +41,22 @@ class NewsFragment : Fragment() {
             }
         }*/
 
-      /*  adapter.addLoadStateListener { state ->
-            when (state.refresh) {
-                is LoadState.Loading -> {
-                    binding.progressBar.visibility = View.VISIBLE
-                }
-                is LoadState.NotLoading -> {
-                    binding.progressBar.visibility = View.GONE
-                }
-                is LoadState.Error -> {
-                    binding.progressBar.visibility = View.GONE
+        /*  adapter.addLoadStateListener { state ->
+              when (state.refresh) {
+                  is LoadState.Loading -> {
+                      binding.progressBar.visibility = View.VISIBLE
+                  }
+                  is LoadState.NotLoading -> {
+                      binding.progressBar.visibility = View.GONE
+                  }
+                  is LoadState.Error -> {
+                      binding.progressBar.visibility = View.GONE
 
-                }
-            }
-        }*/
+                  }
+              }
+          }*/
         renderNewsFragment()
+        setUiEffect()
 
         return binding.root
     }
@@ -63,25 +64,37 @@ class NewsFragment : Fragment() {
 
     private fun renderNewsFragment() {
         lifecycleScope.launch {
-            viewModel.uiState.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED).collectLatest {state->
-                when(state.newsState){
-                    is NewsContract.NewsState.Idle ->{
-                        binding.progressBar.visibility = View.GONE
+            viewModel.uiState.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collectLatest { state ->
+                    when (state.newsState) {
+                        is NewsContract.NewsState.Idle -> {
+                            binding.progressBar.visibility = View.GONE
+                        }
+                        is NewsContract.NewsState.Loading -> {
+                            binding.progressBar.visibility = View.VISIBLE
+                        }
+                        is NewsContract.NewsState.Success -> {
+                            binding.progressBar.visibility = View.GONE
+                            adapter.submitData(state.newsState.news)
+                        }
+                        is NewsContract.NewsState.Error -> {
+                            binding.progressBar.visibility = View.GONE
+                        }
                     }
-                    is NewsContract.NewsState.Loading ->{
-                        binding.progressBar.visibility = View.VISIBLE
-                    }
-                    is NewsContract.NewsState.Success ->{
-                        binding.progressBar.visibility = View.GONE
-                        adapter.submitData(state.newsState.news)
-                    }
-                    is NewsContract.NewsState.Error ->{
-                        Toast.makeText(requireContext(),"ERROR",Toast.LENGTH_LONG).show()
+                }
+        }
+    }
+
+    private fun setUiEffect() {
+        lifecycleScope.launch {
+            viewModel.uiEffect.collect { effect ->
+                when (effect) {
+                    is NewsContract.Effect.OnShowToast -> {
+                        Toast.makeText(requireContext(), "Error", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
         }
     }
-
 
 }

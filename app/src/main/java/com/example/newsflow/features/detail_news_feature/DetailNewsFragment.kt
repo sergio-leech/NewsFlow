@@ -1,10 +1,12 @@
 package com.example.newsflow.features.detail_news_feature
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebViewClient
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -31,6 +33,7 @@ class DetailNewsFragment : Fragment() {
     }
 
 
+    @SuppressLint("SetJavaScriptEnabled")
     private fun renderDetailNewsFragment() {
         lifecycleScope.launch {
             viewModel.uiState.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
@@ -39,18 +42,16 @@ class DetailNewsFragment : Fragment() {
                         is DetailNewsContract.NewsState.Idle -> {
                             binding.progressBar.visibility = View.GONE
                         }
-
                         is DetailNewsContract.NewsState.Loading -> {
                             binding.progressBar.visibility = View.VISIBLE
-
                         }
                         is DetailNewsContract.NewsState.Success -> {
                             binding.progressBar.visibility = View.GONE
-                            binding.newsImage.load(state.newsState.article.urlToImage) {
-                                crossfade(true)
+                            binding.webViewNews.apply {
+                                loadUrl(state.newsState.url)
+                                settings.javaScriptEnabled = true
+                                webViewClient = WebViewClient()
                             }
-                            binding.newsText.text = state.newsState.article.description
-
                         }
                         is DetailNewsContract.NewsState.Error -> {
                             binding.progressBar.visibility = View.GONE

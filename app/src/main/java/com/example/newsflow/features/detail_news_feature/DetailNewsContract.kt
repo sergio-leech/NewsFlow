@@ -14,7 +14,7 @@ class DetailNewsContract {
     sealed class NewsState{
         object Idle:NewsState()
         object Loading:NewsState()
-        data class Success(val article: Article):NewsState()
+        data class Success(val url: String):NewsState()
         data class Error(val exception:String):NewsState()
     }
 
