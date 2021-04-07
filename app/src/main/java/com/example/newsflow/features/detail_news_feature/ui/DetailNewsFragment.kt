@@ -1,4 +1,4 @@
-package com.example.newsflow.features.detail_news_feature
+package com.example.newsflow.features.detail_news_feature.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -11,9 +11,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import coil.load
-import com.example.newsflow.R
 import com.example.newsflow.databinding.FragmentDetailNewsBinding
+import com.example.newsflow.features.detail_news_feature.view_model.DetailNewsContract
+import com.example.newsflow.features.detail_news_feature.view_model.DetailNewsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -31,7 +31,6 @@ class DetailNewsFragment : Fragment() {
         renderDetailNewsFragment()
         return binding.root
     }
-
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun renderDetailNewsFragment() {
@@ -55,10 +54,10 @@ class DetailNewsFragment : Fragment() {
                         }
                         is DetailNewsContract.NewsState.Error -> {
                             binding.progressBar.visibility = View.GONE
-                            //Toast
                         }
                     }
                 }
         }
     }
+
 }

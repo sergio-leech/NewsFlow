@@ -9,11 +9,11 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newsflow.R
-import com.example.newsflow.common.NavigationKeyArgs
+import com.example.newsflow.common.util.NavigationKeyArgsConstant
 import com.example.newsflow.common.models.Article
 import com.example.newsflow.databinding.NewsItemBinding
 
-class NewsPagingAdapter() :
+class NewsPagingAdapter :
     PagingDataAdapter<Article, NewsPagingAdapter.NewsPagingViewHolder>(DiffCallback) {
 
     override fun onBindViewHolder(holder: NewsPagingViewHolder, position: Int) {
@@ -44,7 +44,7 @@ class NewsPagingAdapter() :
         }
 
         private fun navigateToNews(article: Article, view: View) {
-            val arg = bundleOf(NavigationKeyArgs.ARTICLE to article.url)
+            val arg = bundleOf(NavigationKeyArgsConstant.ARTICLE to article.url)
             view.findNavController().navigate(R.id.action_newsFragment_to_detailNewsFragment, arg)
         }
 

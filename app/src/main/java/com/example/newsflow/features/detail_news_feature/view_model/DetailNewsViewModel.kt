@@ -1,22 +1,18 @@
-package com.example.newsflow.features.detail_news_feature
+package com.example.newsflow.features.detail_news_feature.view_model
 
 import androidx.lifecycle.SavedStateHandle
-import com.example.newsflow.common.NavigationKeyArgs
+import com.example.newsflow.common.util.NavigationKeyArgsConstant
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class DetailNewsViewModel @Inject constructor(private val savedStateHandle: SavedStateHandle) :
-    DetailNewsBaseViewModel<DetailNewsContract.State, DetailNewsContract.Event, DetailNewsContract.Effect>() {
+    DetailNewsBaseViewModel<DetailNewsContract.State>() {
 
-    val article = savedStateHandle.get<String>(NavigationKeyArgs.ARTICLE)
+    val article = savedStateHandle.get<String>(NavigationKeyArgsConstant.ARTICLE)
 
     override val initialState: DetailNewsContract.State
         get() = DetailNewsContract.State(DetailNewsContract.NewsState.Idle)
-
-    override fun handlerEvent(event: DetailNewsContract.Event) {
-        TODO("Not yet implemented")
-    }
 
     init {
         renderDetailNewsScreen()

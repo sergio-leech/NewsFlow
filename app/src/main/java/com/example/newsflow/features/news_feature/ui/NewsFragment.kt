@@ -6,13 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.LoadState
-import com.example.newsflow.R
 import com.example.newsflow.databinding.FragmentNewsBinding
 import com.example.newsflow.features.news_feature.adapter.NewsPagingAdapter
 import com.example.newsflow.features.news_feature.view_model.NewsContract
@@ -33,34 +30,15 @@ class NewsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentNewsBinding.inflate(inflater, container, false)
+
         adapter = NewsPagingAdapter()
         binding.newsRecyclerView.adapter = adapter
-        /*lifecycleScope.launch {
-            viewModel.list.collectLatest { data ->
-                adapter.submitData(lifecycle, data)
-            }
-        }*/
 
-        /*  adapter.addLoadStateListener { state ->
-              when (state.refresh) {
-                  is LoadState.Loading -> {
-                      binding.progressBar.visibility = View.VISIBLE
-                  }
-                  is LoadState.NotLoading -> {
-                      binding.progressBar.visibility = View.GONE
-                  }
-                  is LoadState.Error -> {
-                      binding.progressBar.visibility = View.GONE
-
-                  }
-              }
-          }*/
         renderNewsFragment()
         setUiEffect()
 
         return binding.root
     }
-
 
     private fun renderNewsFragment() {
         lifecycleScope.launch {

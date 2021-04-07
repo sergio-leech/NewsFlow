@@ -9,8 +9,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-abstract class NewsBaseViewModel<State : UiState, Event : UiEvent, Effect : UiEffect> :
-    ViewModel() {
+abstract class NewsBaseViewModel<State : UiState, Effect : UiEffect> : ViewModel() {
 
     abstract val initialState: State
 
@@ -20,26 +19,6 @@ abstract class NewsBaseViewModel<State : UiState, Event : UiEvent, Effect : UiEf
 
     fun setState(reduce: State.() -> State) {
         _uiState.value = uiState.value.reduce()
-    }
-
-    private val _uiEvent: MutableSharedFlow<Event> = MutableSharedFlow()
-    val uiEvent: SharedFlow<Event>
-        get() = _uiEvent.asSharedFlow()
-
-    init {
-        viewModelScope.launch {
-            uiEvent.collect { event ->
-                eventHandler(event)
-            }
-        }
-    }
-
-    abstract fun eventHandler(event: Event)
-
-    fun setEvent(event: Event) {
-        viewModelScope.launch {
-            _uiEvent.emit(event)
-        }
     }
 
     private val _uiEffect: Channel<Effect> = Channel()
@@ -52,6 +31,4 @@ abstract class NewsBaseViewModel<State : UiState, Event : UiEvent, Effect : UiEf
             _uiEffect.send(effect)
         }
     }
-
-
 }

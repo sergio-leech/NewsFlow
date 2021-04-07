@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/detailNewsFragment"
-        android:name="com.example.newsflow.features.detail_news_feature.DetailNewsFragment"
+        android:name="com.example.newsflow.features.detail_news_feature.ui.DetailNewsFragment"
         android:label="fragment_detail_news"
         tools:layout="@layout/fragment_detail_news" />
 </navigation>
